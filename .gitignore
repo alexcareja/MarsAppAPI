@@ -103,8 +103,5 @@ dist
 # TernJS port file
 .tern-port
 
-# JS files
-*.js
-
-# TODO files
-routes.ts
+# Server JS file
+server..js
