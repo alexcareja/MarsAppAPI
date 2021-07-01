@@ -1,13 +1,14 @@
-import express, { Express } from "express";
+import express from "express";
+import { router } from "./router";
  
-const app = express();
+const expressApp = express();
 const port = 8000;
+
+
+expressApp.use(express.json());
+
+expressApp.use("/", router);
  
-app.use(express.json());
-const router = express.Router();
-router.get('/test', (req, res) => res.send('Hello world !'));
-app.use('/', router);
- 
-app.listen(port, () => {
+expressApp.listen(port, () => {
   console.log(`Test backend is running on port ${port}`);
 });
