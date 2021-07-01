@@ -1,9 +1,8 @@
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import express from "express";
  
 const expressApp = express();
 const port = 8000;
-const axios = require("axios");
 const apiKey = "IqA8fYkIhjXf62lkAuWM3WqexG4waX0mbovOUeII"
 enum Camera {
     Fhaz = "fhaz",
@@ -64,15 +63,14 @@ function getRoversPhotos(expressRequest: express.Request, expressResponse: expre
 }
 
 function getRoversPhotosGeneric(expressRequest: express.Request, expressResponse: express.Response): void {
-    axios.get("https://api.nasa.gov/mars-photos/api/v1/rovers/" + expressRequest.params["0"]
-        + "/photos?sol=121&camera=" + expressRequest.params["1"] + "&api_key=" + apiKey)
+    axios.get("https://api.nasa.gov/mars-photos/api/v1/rovers/" + expressRequest.params.rover
+        + "/photos?sol=121&camera=" + expressRequest.params.camera + "&api_key=" + apiKey)
         .then(function (axiosResponse: AxiosResponse) {
             const photosUrlsList: string[] = [];
             for (const entry of axiosResponse.data.photos) {
                 photosUrlsList.push(entry.img_src);
             }
             expressResponse.send(photosUrlsList.join(" \r\n"));
-            console.log(expressRequest.route.path);
         })
         .catch(function (error: string) {
             console.log(error);
@@ -87,7 +85,7 @@ function initRouter(): express.Router {
     router.get("/test", getTest);
     router.get("/rovers", getRovers);
     router.get("/rovers/photos", getRoversPhotos);
-    router.get("/rovers/*/photos/*", getRoversPhotosGeneric);
+    router.get("/rovers/:rover/photos/:camera", getRoversPhotosGeneric);
 
     return router;
 }
